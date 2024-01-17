@@ -7,7 +7,7 @@ import { ChevronDown, ChevronRight, LucideIcon } from "lucide-react";
 
 interface ItemProps {
   id?: Id<"documents">;
-  documentIcon?: "string";
+  documentIcon?: string;
   active?: boolean;
   expanded?: boolean;
   isSearch?: boolean;
