@@ -16,6 +16,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Item } from "./item";
 import { toast } from "sonner";
+import { DocumentList } from "./document-list";
 export const Navigation = () => {
   const pathname = usePathname();
   const isMobile = useMediaQuery("(max-width:768px)");
@@ -124,9 +125,7 @@ export const Navigation = () => {
           <Item onClick={onCreate} label="New page" icon={PlusCircle} />
         </div>
         <div className="mt-4">
-          {/* {documents?.map((document) => (
-            <p key={document._id}>{document.title}</p>
-          ))} */}
+          <DocumentList />
         </div>
         <div
           onMouseDown={handleMouseDown}
