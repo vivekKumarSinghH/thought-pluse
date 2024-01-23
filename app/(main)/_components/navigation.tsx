@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import {
   ChevronsLeft,
   MenuIcon,
+  Plus,
   PlusCircle,
   Search,
   Settings,
@@ -89,7 +90,7 @@ export const Navigation = () => {
     }
   };
 
-  const onCreate = () => {
+  const handleCreate = () => {
     const promise = create({ title: "Untitled" });
 
     toast.promise(promise, {
@@ -122,10 +123,11 @@ export const Navigation = () => {
           <UserItem />
           <Item onClick={() => null} label="Search" isSearch icon={Search} />
           <Item onClick={() => null} label="Setting" isSearch icon={Settings} />
-          <Item onClick={onCreate} label="New page" icon={PlusCircle} />
+          <Item onClick={handleCreate} label="New page" icon={PlusCircle} />
         </div>
         <div className="mt-4">
           <DocumentList />
+          <Item onClick={handleCreate} icon={Plus} label="Add a page" />
         </div>
         <div
           onMouseDown={handleMouseDown}
