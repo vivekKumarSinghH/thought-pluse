@@ -99,3 +99,68 @@ export const create = mutation({
     return document;
   }
 });
+export const getTrash = query({
+
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const documents = await ctx.db
+      .query("documents")
+      .withIndex("by_user", (q) =>
+        q.eq("userId", userId)
+      )
+      .filter((q) =>
+        q.eq(q.field("isArchived"), true)
+      )
+      .order("desc")
+      .collect();
+
+    return documents;
+  },
+});
+
+export const restore = mutation({
+  args: {
+    id: v.id("documents")
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+    const existingDocument = await ctx.db.get(args.id)
+    if (!existingDocument) {
+      throw new Error("Not Found")
+    }
+    const userId = identity.subject;
+
+    if (existingDocument.userId !== userId) {
+      throw new Error("Unauthorized")
+    }
+    const options: Partial<Doc<"documents">> = {
+      isArchived: false
+    }
+    if (existingDocument.parentDocument) {
+      const parent = await ctx.db.get(existingDocument.parentDocument)
+      if (parent?.isArchived) {
+        options.parentDocument = undefined
+      }
+    }
+    const document = await ctx.db.insert("documents", {
+      title: args.title,
+      parentDocument: args.parentDocument,
+      userId,
+      isArchived: false,
+      isPublished: false,
+    });
+
+    return document;
+  }
+});
